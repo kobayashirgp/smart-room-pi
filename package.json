@@ -1,0 +1,17 @@
+{
+  "name": "smart-room-pi",
+  "version": "1.0.0",
+  "description": "Um projeto hobby para assistente virtual com automação residencial",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mateus Kobayashi",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.27.0",
+    "raspberrypi-liquid-crystal-simple": "^1.13.0"
+  }
+}
