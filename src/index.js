@@ -1,22 +1,24 @@
-const http = require("http");
 const moment = require("moment");
-const LCD = require("raspberrypi-liquid-crystal-simple");
-
-const lcd = new LCD(1, 0x27, 16, 2);
+const express = require("express");
+const bodyParser = require("body-parser");
 
 const hostname = "127.0.0.1";
 const port = 3000;
-lcd.cursor = true;
-lcd.display = true;
-const server = http.createServer();
+const server = express();
+
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
+
+const router = express.Router();
+router.get("/", function (req, res, next) {
+  res.status(200).send({
+    date: moment().format("DD/MM/YYYY HH:mm:ss"),
+    info: "Olá mundo",
+  });
+});
+
+server.use(router);
 
 server.listen(port, hostname, async () => {
-  lcd.on("error", (ex) => console.log(ex));
-  lcd.on("ready", () => {
-    lcd.setLine(0, "Hello World");
-    console.log("ready");
-    setInterval(() => lcd.setLine(1, moment().format("DD/MM/YYYY HH:mm:ss")), 1000);
-  });
-  lcd.initSync();
   console.log(`Server running at http://${hostname}:${port}/`);
 });
