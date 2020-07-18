@@ -1,6 +1,8 @@
 const moment = require("moment");
 const express = require("express");
 const bodyParser = require("body-parser");
+const SerialPort = require("serialport");
+const ByteLength = require("@serialport/parser-byte-length");
 
 const hostname = "127.0.0.1";
 const port = 3000;
@@ -17,8 +19,24 @@ router.get("/", function (req, res, next) {
   });
 });
 
+var port = new SerialPort("/dev/ttyAMA0", {
+  baudRate: 9600,
+  dataBits: 8,
+  parity: "none",
+  stopBits: 1,
+  flowControl: false,
+});
+
+var parser = port.pipe(new ByteLength({ length: 16 }));
+
 server.use(router);
 
 server.listen(port, hostname, async () => {
+  parser.on("data", function (data) {
+    var dataUTF8 = data.toString("utf-8");
+    if (dataUTF8.substring(0, 1) === ":") {
+      console.log("Data: " + data);
+    }
+  });
   console.log(`Server running at http://${hostname}:${port}/`);
 });
