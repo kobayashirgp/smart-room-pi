@@ -8,17 +8,6 @@ const hostname = "127.0.0.1";
 const port = 3000;
 const server = express();
 
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
-
-const router = express.Router();
-router.get("/", function (req, res, next) {
-  res.status(200).send({
-    date: moment().format("DD/MM/YYYY HH:mm:ss"),
-    info: "Olá mundo",
-  });
-});
-
 var serialPort = new SerialPort("/dev/ttyAMA0", {
   baudRate: 9600,
   dataBits: 8,
@@ -28,6 +17,23 @@ var serialPort = new SerialPort("/dev/ttyAMA0", {
 });
 
 var parser = serialPort.pipe(new ByteLength({ length: 16 }));
+
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
+
+const router = express.Router();
+router.get("/", function (req, res, next) {
+  res.status(200).send({
+    date: moment().format("DD/MM/YYYY HH:mm:ss"),
+    info: "Olá mundo",
+  });
+  serialPort.write("hello from node\n", (err) => {
+    if (err) {
+      return console.log("Error on write: ", err.message);
+    }
+    console.log("message written");
+  });
+});
 
 server.use(router);
 
