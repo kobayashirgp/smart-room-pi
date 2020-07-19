@@ -8,7 +8,7 @@ const hostname = "127.0.0.1";
 const port = 3000;
 const server = express();
 
-var serialPort = new SerialPort("/dev/ttyAMA0", {
+var serialPort = new SerialPort("/dev/ttyACM0", {
   baudRate: 9600,
   dataBits: 8,
   parity: "none",
