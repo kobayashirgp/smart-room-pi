@@ -19,7 +19,7 @@ router.get("/", function (req, res, next) {
   });
 });
 
-var port = new SerialPort("/dev/ttyAMA0", {
+var serialPort = new SerialPort("/dev/ttyAMA0", {
   baudRate: 9600,
   dataBits: 8,
   parity: "none",
@@ -27,7 +27,7 @@ var port = new SerialPort("/dev/ttyAMA0", {
   flowControl: false,
 });
 
-var parser = port.pipe(new ByteLength({ length: 16 }));
+var parser = serialPort.pipe(new ByteLength({ length: 16 }));
 
 server.use(router);
 
